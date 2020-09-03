@@ -1,0 +1,48 @@
+<div>
+    <div class="toolbox left">
+        <div class="group commands">
+            <div class="item" (click)="setDrawFactor('Line')">
+                a
+            </div>
+        </div>
+        <div class="group shapes">
+            <div class="item" (click)="setDrawFactor('Square')">
+                b
+            </div>
+        </div>
+        <div class="group tools">
+            <div class="item" (click)="setDrawFactor('Circle')">
+                c
+            </div>
+            <div class="item" (click)="setDrawFactor('Pencil')">
+                d
+            </div>
+            <div class="item" (click)="setDrawFactor('Eraser')">
+                e
+            </div>
+            <div class="item" (click)="definirEspessura(10)">
+                1
+            </div>
+            <div class="item" (click)="definirEspessura(20)">
+                2
+            </div>
+            <div class="item" (click)="definirEspessura(30)">
+                3
+            </div>
+            <div class="item" (click)="definirEspessura(40)">
+                4
+            </div>
+            <div class="item" (click)="definirEspessura(50)">
+                5
+            </div>
+        </div>
+    </div>
+
+    <canvas #canvas width="960vw" height="540vh"></canvas>
+
+    <div class="toolbox right">
+        <div class="group swatches">
+
+        </div>
+    </div>
+</div>

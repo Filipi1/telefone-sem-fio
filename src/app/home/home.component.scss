@@ -1,0 +1,24 @@
+canvas {
+    border: 1px solid black;
+    margin-left: 60px;
+}
+
+.toolbox {
+    height: 100vh;
+    position: absolute;
+    background-color: gray;
+    left: 0px;
+    top: 0px;
+
+    .group {
+        .item {
+            padding: 10px 20px;
+        }
+
+        .item:hover {
+            background-color: white;
+        }
+    }
+}
+
+

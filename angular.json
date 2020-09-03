@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "telefone-sem-fio"
+    }
+  },
+  "defaultProject": "telefone-sem-fio",
+  "cli": {
+    "analytics": "51c693be-596c-4453-ac81-21e2a9cdb6c9"
+  }
 }
