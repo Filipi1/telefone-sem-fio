@@ -1,16 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CoordsService } from 'src/services/coords.service';
-
-export enum Tools {
-  TOOL_LINE,
-  TOOL_CIRCLE,
-  TOOL_SQUARE,
-  TOOL_TRIANGLE,
-  TOOL_PENCIL,
-  TOOL_TINT_ALL,
-  TOOL_BRUSH,
-  TOOL_ERASER
-}
+import { Fill } from 'src/class/fill';
+import { Paint, Tools } from 'src/class/paint';
 
 @Component({
   selector: 'app-home',
@@ -22,41 +13,48 @@ export class HomeComponent implements OnInit {
   @ViewChild('canvas', {static: true}) canvas: ElementRef<HTMLCanvasElement>;
   startPos
   currentPos
-  tool: Tools = Tools.TOOL_PENCIL
-  context
+  context: CanvasRenderingContext2D 
   savedData
 
-  expessura = 2
+  paintConfig: Paint = new Paint()
+
+  undoStack = [];
+  undoLimit = 3;
 
   constructor(private coordsService: CoordsService) { }
 
   ngOnInit(): void {
     this.canvas.nativeElement.onmousedown = e => this.onMouseDown(e)
     this.context = this.canvas.nativeElement.getContext("2d")
+    this.context.lineCap = 'round';
+  
   }
 
   setDrawFactor(event) {
     switch(event) {
       case "Pencil":
-        this.tool = Tools.TOOL_PENCIL
+        this.paintConfig.activeTool = Tools.TOOL_PENCIL
         break;
       case "Line":
-        this.tool = Tools.TOOL_LINE
+        this.paintConfig.activeTool = Tools.TOOL_LINE
         break;
       case "Circle":
-        this.tool = Tools.TOOL_CIRCLE
+        this.paintConfig.activeTool = Tools.TOOL_CIRCLE
         break;
       case "Square":
-        this.tool = Tools.TOOL_SQUARE
+        this.paintConfig.activeTool = Tools.TOOL_SQUARE
         break;
       case "Eraser":
-        this.tool = Tools.TOOL_ERASER
+        this.paintConfig.activeTool = Tools.TOOL_ERASER
+        break;
+      case "Tintall":
+        this.paintConfig.activeTool = Tools.TOOL_TINT_ALL
         break;
     }
   }
 
   definirEspessura(i) {
-    this.expessura = i
+    this.paintConfig.lineWidth = i
   }
 
   onMouseDown(e: MouseEvent): void {
@@ -67,17 +65,19 @@ export class HomeComponent implements OnInit {
     
     this.startPos = this.coordsService.getMouseCoordsOnCanvas(e, this.canvas.nativeElement);
 
-    if (this.tool == Tools.TOOL_PENCIL) {
+    if (this.paintConfig.activeTool == Tools.TOOL_PENCIL) {
       this.context.beginPath()
       this.context.moveTo(this.startPos.x, this.startPos.y)
-    } else if (this.tool == Tools.TOOL_ERASER) {
-      this.context.clearRect(this.startPos.x, this.startPos.y, this.expessura, this.expessura)
+    } else if (this.paintConfig.activeTool == Tools.TOOL_ERASER) {
+      this.context.clearRect(this.startPos.x, this.startPos.y, this.paintConfig.lineWidth, this.paintConfig.lineWidth)
+    } else if (this.paintConfig.activeTool == Tools.TOOL_TINT_ALL) {
+      new Fill(this.canvas.nativeElement, this.startPos, this.paintConfig.selectedColor)
     }
   }
 
   onMouseMove(e: MouseEvent): void {
     this.currentPos = this.coordsService.getMouseCoordsOnCanvas(e, this.canvas.nativeElement)
-    switch(this.tool) {
+    switch(this.paintConfig.activeTool) {
       case Tools.TOOL_CIRCLE:
       case Tools.TOOL_LINE:
       case Tools.TOOL_SQUARE:
@@ -88,7 +88,7 @@ export class HomeComponent implements OnInit {
         this.drawFreeLine();
         break;
       case Tools.TOOL_ERASER:
-        this.context.clearRect(this.currentPos.x, this.currentPos.y, this.expessura, this.expessura)
+        this.context.clearRect(this.currentPos.x, this.currentPos.y, this.paintConfig.lineWidth, this.paintConfig.lineWidth)
         break;
       default:
         break;
@@ -103,9 +103,10 @@ export class HomeComponent implements OnInit {
   drawShape() {
     this.context.putImageData(this.savedData, 0, 0);
     this.context.beginPath();
-    this.context.lineWidth = this.expessura;
+    this.context.strokeStyle = this.paintConfig.selectedColor;
+    this.context.lineWidth = this.paintConfig.lineWidth;
 
-    switch(this.tool) {
+    switch(this.paintConfig.activeTool) {
       case Tools.TOOL_LINE:
         this.context.moveTo(this.startPos.x, this.startPos.y);
         this.context.lineTo(this.currentPos.x, this.currentPos.y);
@@ -131,9 +132,26 @@ export class HomeComponent implements OnInit {
   }
 
   drawFreeLine() {
-      this.context.lineWidth = this.expessura;
-      this.context.lineCap = 'round';
+      this.context.lineWidth = this.paintConfig.lineWidth;
       this.context.lineTo(this.currentPos.x, this.currentPos.y);
+      this.context.strokeStyle = this.paintConfig.selectedColor;
       this.context.stroke();
+  }
+
+  setColor(color) {
+    switch(color) {
+      case "Yellow":
+        this.paintConfig.selectedColor = "#ffd000"
+        break;
+      case "Purple":
+        this.paintConfig.selectedColor = "#9f4be4"
+        break;
+      default:
+        this.paintConfig.selectedColor = "#a6a6a6"
+    }
+  }
+
+  clear() {
+    //clear
   }
 }

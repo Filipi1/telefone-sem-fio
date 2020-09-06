@@ -10,8 +10,8 @@ export class CoordsService {
 
   getMouseCoordsOnCanvas(e, canvas) {
     let rect = canvas.getBoundingClientRect();
-    let x = e.clientX - rect.left;
-    let y = e.clientY - rect.top;
+    let x = Math.round(e.clientX - rect.left);
+    let y = Math.round(e.clientY - rect.top);
     
     return new Point(x, y);
   }

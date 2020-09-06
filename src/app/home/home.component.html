@@ -2,43 +2,62 @@
     <div class="toolbox left">
         <div class="group commands">
             <div class="item" (click)="setDrawFactor('Line')">
-                a
+                <i class="fas fa-grip-lines"></i>
             </div>
         </div>
         <div class="group shapes">
             <div class="item" (click)="setDrawFactor('Square')">
-                b
+                <i class="far fa-square"></i>
             </div>
-        </div>
-        <div class="group tools">
             <div class="item" (click)="setDrawFactor('Circle')">
-                c
+                <i class="far fa-circle"></i>
             </div>
             <div class="item" (click)="setDrawFactor('Pencil')">
-                d
+                <i class="fas fa-pencil-alt"></i>
+            </div>
+            <div class="item" (click)="setDrawFactor('Tintall')">
+                <i class="fas fa-fill-drip"></i>
             </div>
             <div class="item" (click)="setDrawFactor('Eraser')">
-                e
+                <i class="fas fa-eraser"></i>
+            </div>
+        </div>
+        <hr>
+        <div class="group tools">
+            <div class="item" (click)="definirEspessura(5)">
+                <i style="font-size: 5px" class="fas fa-circle"></i>
             </div>
             <div class="item" (click)="definirEspessura(10)">
-                1
+                <i style="font-size: 10px" class="fas fa-circle"></i>
+            </div>
+            <div class="item" (click)="definirEspessura(15)">
+                <i style="font-size: 15px" class="fas fa-circle"></i>
             </div>
             <div class="item" (click)="definirEspessura(20)">
-                2
+                <i style="font-size: 20px" class="fas fa-circle"></i>
+            </div>
+            <div class="item" (click)="definirEspessura(25)">
+                <i style="font-size: 25px" class="fas fa-circle"></i>
             </div>
             <div class="item" (click)="definirEspessura(30)">
-                3
-            </div>
-            <div class="item" (click)="definirEspessura(40)">
-                4
-            </div>
-            <div class="item" (click)="definirEspessura(50)">
-                5
+                <i style="font-size: 30px" class="fas fa-circle"></i>
             </div>
         </div>
     </div>
 
-    <canvas #canvas width="960vw" height="540vh"></canvas>
+    <div class="b-box">
+        <div class="display">
+            Bloco
+        </div>
+        <br>
+        <canvas #canvas width="960vw" height="540vh"></canvas>
+        <div class="bottom-toolbox">
+            <button class="button-with-color" (click)="setColor('Yellow')"></button>
+            <button class="button-with-color purple" (click)="setColor('Purple')"></button>
+            <button class="button-with-color gray" (click)="setColor()"></button>
+            <button>Limpar Tudo</button>
+        </div>
+    </div>
 
     <div class="toolbox right">
         <div class="group swatches">
