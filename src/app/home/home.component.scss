@@ -1,7 +1,8 @@
 canvas {
-    border: 1px solid black;
+    //border: 1px solid black;
     margin-left: 60px;
     background-color: white;
+    box-shadow: 0px 0px 10px rgb(199, 199, 199);
 }
 
 .b-box {
@@ -17,18 +18,44 @@ canvas {
         padding: 10px 20px;
         background-color: rgb(26, 11, 37);
         border: 5px solid #9f4be4;
-        border-radius: 50px;
-        color: white;
+        border-bottom: none;
+        color: #ffe600;
         min-width: 400px;
         text-align: center;
+        transform: matrix(1, 0, 0, 1, -80, 0);
     }
 }
 
 .bottom-toolbox {
-    padding: 10px 0px;
+    padding: 10px 20px;
+    display: flex;
+    width: 400px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color:#9f4be4;
+    box-shadow: 0px 0px 10px rgb(204, 204, 204);
+    transform: matrix(1, 0, 0, 1, -80, 0);
     
     button {
         margin-left: 8px;
+    }
+}
+
+.card {
+    margin-left: 20px;
+    padding: 20px 5px;
+    background-color: white;
+    box-shadow: 0px 0px 10px rgb(199, 199, 199);
+
+    img {
+        width: 150px;
+        box-shadow: 0px 0px 10px rgb(212, 212, 212);
+        cursor: pointer;
+    }
+
+    img:hover {
+        transform: scale(1.2);
     }
 }
 
@@ -55,17 +82,18 @@ canvas {
 }
 
 .toolbox {
-    height: 100vh;
+    height: stretch;
     position: absolute;
     box-shadow: 0px 0px 10px rgb(200, 200, 200);
     background-color: white;
     left: 0px;
-    top: 0px;
+    //top: 0px;
 
     .group {
         .item {
             padding: 20px 20px;
             text-align: center;
+            color: rgb(31, 31, 31);
         }
 
         .item:hover {
@@ -75,4 +103,30 @@ canvas {
     }
 }
 
+.system-button {
+    padding: 10px 20px;
+    background-color: #ffffff;
+    border: none;
+    color: #9f4be4;
+    font-weight: bold;
+    cursor: pointer;
+    float: right;
+}
 
+.system-button:hover {
+    background-color: #7f3ab8;
+    color: white;
+}
+
+.system-button:focus {
+    outline: none;
+}
+
+.titleDisplay {
+    margin: 0px 0px 10px 20px;
+    padding: 10px 0px;
+    background-color: #7f3ab8;
+    color: white;
+    font-weight: bold;
+    width: 200px;
+}

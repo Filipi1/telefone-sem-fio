@@ -1,11 +1,20 @@
-<div>
+<div style="padding-left: 170px">
     <div class="toolbox left">
         <div class="group commands">
+            <div class="item" (click)="undoPaint()">
+                <i class="fas fa-undo"></i>
+            </div>
+            <div class="item" (click)="saveImageDraw()">
+                <i class="fas fa-download"></i>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="group shapes">
             <div class="item" (click)="setDrawFactor('Line')">
                 <i class="fas fa-grip-lines"></i>
             </div>
-        </div>
-        <div class="group shapes">
             <div class="item" (click)="setDrawFactor('Square')">
                 <i class="far fa-square"></i>
             </div>
@@ -24,22 +33,22 @@
         </div>
         <hr>
         <div class="group tools">
-            <div class="item" (click)="definirEspessura(5)">
+            <div class="item" (click)="lineWeight(5)">
                 <i style="font-size: 5px" class="fas fa-circle"></i>
             </div>
-            <div class="item" (click)="definirEspessura(10)">
+            <div class="item" (click)="lineWeight(10)">
                 <i style="font-size: 10px" class="fas fa-circle"></i>
             </div>
-            <div class="item" (click)="definirEspessura(15)">
+            <div class="item" (click)="lineWeight(15)">
                 <i style="font-size: 15px" class="fas fa-circle"></i>
             </div>
-            <div class="item" (click)="definirEspessura(20)">
+            <div class="item" (click)="lineWeight(20)">
                 <i style="font-size: 20px" class="fas fa-circle"></i>
             </div>
-            <div class="item" (click)="definirEspessura(25)">
+            <div class="item" (click)="lineWeight(25)">
                 <i style="font-size: 25px" class="fas fa-circle"></i>
             </div>
-            <div class="item" (click)="definirEspessura(30)">
+            <div class="item" (click)="lineWeight(30)">
                 <i style="font-size: 30px" class="fas fa-circle"></i>
             </div>
         </div>
@@ -49,13 +58,34 @@
         <div class="display">
             Bloco
         </div>
+
+        <div style="display: flex; flex-direction: row">
+            <canvas #canvas width="960px" height="540px"></canvas>
+            <div style="display: flex; flex-direction: column; text-align: center">
+                <div class="titleDisplay">Pendente</div>
+                <div class="card" style="height: 100%">
+                    Advinhe
+                    <br><br>
+
+                    <img src="assets/desenho.png"><br><br>
+                    <img src="assets/desenho2.png"><br><br>
+                    
+                    Desenhe
+                    <br><br>
+                    
+                    <div style="padding: 10px 20px; margin-bottom: 10px;  background-color: #9f4be4; color: white; font-weight: 800">???</div>
+                </div>
+            </div>
+            
+        </div>
+        
         <br>
-        <canvas #canvas width="960vw" height="540vh"></canvas>
+
         <div class="bottom-toolbox">
-            <button class="button-with-color" (click)="setColor('Yellow')"></button>
-            <button class="button-with-color purple" (click)="setColor('Purple')"></button>
-            <button class="button-with-color gray" (click)="setColor()"></button>
-            <button>Limpar Tudo</button>
+            <button class="button-with-color" (click)="setLineColor('Yellow')"></button>
+            <button class="button-with-color purple" (click)="setLineColor('Purple')"></button>
+            <button class="button-with-color gray" (click)="setLineColor('')"></button>
+            <button class="system-button" (click)="clearDraw()">Limpar Tudo</button>
         </div>
     </div>
 

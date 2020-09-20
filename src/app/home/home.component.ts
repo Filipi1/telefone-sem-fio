@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { CoordsService } from 'src/services/coords.service';
 import { Fill } from 'src/class/fill';
 import { Paint, Tools } from 'src/class/paint';
+import Point from 'src/class/point';
 
 @Component({
   selector: 'app-home',
@@ -10,16 +11,21 @@ import { Paint, Tools } from 'src/class/paint';
 })
 export class HomeComponent implements OnInit {
 
+  @HostListener('document:keypress', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) { 
+    if (event.keyCode == 26 && event.ctrlKey)
+      this.undoPaint()
+  }
+  
   @ViewChild('canvas', {static: true}) canvas: ElementRef<HTMLCanvasElement>;
-  startPos
-  currentPos
   context: CanvasRenderingContext2D 
-  savedData
 
+  startPos: Point
+  currentPos: Point
+  savedData: ImageData
   paintConfig: Paint = new Paint()
-
-  undoStack = [];
-  undoLimit = 3;
+  undoStack: ImageData[] = [];
+  undoLimit: Number = 10;
 
   constructor(private coordsService: CoordsService) { }
 
@@ -27,7 +33,8 @@ export class HomeComponent implements OnInit {
     this.canvas.nativeElement.onmousedown = e => this.onMouseDown(e)
     this.context = this.canvas.nativeElement.getContext("2d")
     this.context.lineCap = 'round';
-  
+    this.context.fillStyle = "#FFF"
+    this.context.fillRect(0, 0, this.context.canvas.width, this.context.canvas.height)
   }
 
   setDrawFactor(event) {
@@ -53,12 +60,13 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  definirEspessura(i) {
-    this.paintConfig.lineWidth = i
-  }
-
   onMouseDown(e: MouseEvent): void {
     this.savedData = this.context.getImageData(0, 0, this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight)
+
+    if (this.undoStack.length >= this.undoLimit)
+      this.undoStack.shift();
+
+    this.undoStack.push(this.savedData);
 
     this.canvas.nativeElement.onmousemove = e => this.onMouseMove(e)
     document.onmouseup = e => this.onMouseUp(e);
@@ -75,8 +83,10 @@ export class HomeComponent implements OnInit {
     }
   }
 
+
   onMouseMove(e: MouseEvent): void {
     this.currentPos = this.coordsService.getMouseCoordsOnCanvas(e, this.canvas.nativeElement)
+
     switch(this.paintConfig.activeTool) {
       case Tools.TOOL_CIRCLE:
       case Tools.TOOL_LINE:
@@ -98,6 +108,20 @@ export class HomeComponent implements OnInit {
   onMouseUp(e: MouseEvent): void {
     this.canvas.nativeElement.onmousemove = null;
     document.onmouseup = null
+  }
+
+  lineWeight(weight: number) {
+    this.context.lineCap = 'round';
+    this.paintConfig.lineWidth = weight
+  }
+
+  undoPaint() {
+    if (this.undoStack.length > 0) {
+      this.context.putImageData(this.undoStack[this.undoStack.length - 1], 0, 0);
+      this.undoStack.pop();
+    } else {
+      alert("Nenhum desfazer disponivel")
+    }
   }
 
   drawShape() {
@@ -132,13 +156,15 @@ export class HomeComponent implements OnInit {
   }
 
   drawFreeLine() {
+      this.context.lineCap = "round";
+      this.context.lineJoin = this.context.lineCap = 'round';
       this.context.lineWidth = this.paintConfig.lineWidth;
       this.context.lineTo(this.currentPos.x, this.currentPos.y);
       this.context.strokeStyle = this.paintConfig.selectedColor;
       this.context.stroke();
   }
 
-  setColor(color) {
+  setLineColor(color) {
     switch(color) {
       case "Yellow":
         this.paintConfig.selectedColor = "#ffd000"
@@ -151,7 +177,25 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  clear() {
-    //clear
+  saveImageDraw() {
+    const image = this.canvas.nativeElement.toDataURL("image/png", 1.0)
+      .replace("image/png", "image/octet-stream")
+    
+    var link = document.createElement("a")
+    link.download = "image.png"
+    link.href = image;
+    link.click();
+  }
+
+  clearDraw() {
+    this.savedData = this.context.getImageData(0, 0, this.canvas.nativeElement.clientWidth, this.canvas.nativeElement.clientHeight)
+    if (this.undoStack.length >= this.undoLimit)
+      this.undoStack.shift();
+
+    this.undoStack.push(this.savedData);
+
+    this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height)
+    this.context.fillStyle = "#FFF"
+    this.context.fillRect(0, 0, this.context.canvas.width, this.context.canvas.height)
   }
 }
