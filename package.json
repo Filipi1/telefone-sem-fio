@@ -1,6 +1,7 @@
 {
   "name": "telefone-sem-fio",
-  "version": "0.0.0",
+  "author": "Filipe Braga",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
